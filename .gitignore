@@ -1,0 +1,17 @@
+### Build ###
+target/
+.mvn/wrapper/maven-wrapper.jar
+
+### Configuration locale et secrets (jamais dans Git) ###
+application-local.properties
+db/*-local.sql
+.env
+
+### IntelliJ IDEA ###
+.idea/
+*.iml
+*.iws
+*.ipr
+
+### VS Code ###
+.vscode/
