@@ -1,0 +1,27 @@
+# Integration continue (lot alpha, piste 7) : les tests tournent a chaque push
+name: Tests
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+
+jobs:
+  verifier:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Recuperer le code
+        uses: actions/checkout@v4
+
+      - name: Installer Java 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: maven
+
+      - name: Compiler et lancer les tests
+        run: |
+          chmod +x mvnw
+          ./mvnw -B verify
