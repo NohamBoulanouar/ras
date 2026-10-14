@@ -85,28 +85,28 @@ public class DonneesDemo implements CommandLineRunner {
 
         // 6. Incidents affectés : jamais vert, orange ou rouge, même anciens (RG4)
         Incident escalierNord = ouvrirIncident(escGc02, "Bruit anormal et arrêts répétés", 80);
-        escalierNord.setPrestataire(elevatec);
+        escalierNord.affecter(elevatec);
         incidentRepository.save(escalierNord);
 
         Incident ascenseurPmr = ouvrirIncident(ascBe01, "Porte de l'ascenseur qui ne se ferme plus", 10);
-        ascenseurPmr.setPrestataire(elevatec);
+        ascenseurPmr.affecter(elevatec);
         incidentRepository.save(ascenseurPmr);
 
         // 7. Incidents résolus : visibles dans l'historique et sur la fiche équipement
         Incident distributeurResolu = new Incident(disTi01, "Écran tactile du distributeur fissuré", ilYa(240));
-        distributeurResolu.setPrestataire(portisys);
-        distributeurResolu.setDateResolution(ilYa(192));
+        distributeurResolu.affecter(portisys);
+        distributeurResolu.resoudre(ilYa(192));
         incidentRepository.save(distributeurResolu);
         evaluationRepository.save(new Evaluation(
                 distributeurResolu, 4, "Intervention rapide, pièce changée en une journée", ilYa(180)));
 
         Incident ascenseurResolu = new Incident(ascGc01, "Bouton d'appel du quai A inopérant", ilYa(144));
-        ascenseurResolu.setPrestataire(elevatec);
-        ascenseurResolu.setDateResolution(ilYa(120));
+        ascenseurResolu.affecter(elevatec);
+        ascenseurResolu.resoudre(ilYa(120));
         incidentRepository.save(ascenseurResolu);
 
         Incident ecranResolu = new Incident(ecrTi02, "Affichage figé, redémarré par l'équipe de station", ilYa(72));
-        ecranResolu.setDateResolution(ilYa(48));
+        ecranResolu.resoudre(ilYa(48));
         incidentRepository.save(ecranResolu);
     }
 

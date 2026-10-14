@@ -1,5 +1,6 @@
 package altn72.ras.modele;
 
+import altn72.ras.exception.RegleMetierException;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
@@ -66,7 +67,10 @@ public class Incident {
         return prestataire;
     }
 
-    public void setPrestataire(Prestataire prestataire) {
+    public void affecter(Prestataire prestataire) {
+        if (estResolu()){
+            throw new RegleMetierException("Incident déjà résolu");
+        }
         this.prestataire = prestataire;
     }
 
@@ -74,7 +78,13 @@ public class Incident {
         return dateResolution;
     }
 
-    public void setDateResolution(LocalDateTime dateResolution) {
+    public void resoudre(LocalDateTime dateResolution) {
+        if (estResolu()){
+            throw new RegleMetierException("Incident déjà résolu");
+        }
+        if (dateResolution.isBefore(dateOuverture)) {
+            throw new RegleMetierException("La date de résolution ne peut pas être antérieure à l’ouverture");
+        }
         this.dateResolution = dateResolution;
     }
 }

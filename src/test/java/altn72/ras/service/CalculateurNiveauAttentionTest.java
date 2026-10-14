@@ -46,7 +46,7 @@ class CalculateurNiveauAttentionTest {
     void incidentAffecteEstPrisEnCharge() {
         // 100 h donnerait ROUGE : on vérifie que "pris en charge" passe avant la couleur
         Incident incident = incidentOuvertIlYa(100);
-        incident.setPrestataire(new Prestataire("Élévatec", "contact@elevatec.fr", "0102030405"));
+        incident.affecter(new Prestataire("Élévatec", "contact@elevatec.fr", "0102030405"));
 
         assertEquals(NiveauAttention.PRIS_EN_CHARGE, calculateur.calculer(incident));
     }
