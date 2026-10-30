@@ -9,6 +9,7 @@ import altn72.ras.modele.Prestataire;
 import altn72.ras.repository.EquipementRepository;
 import altn72.ras.repository.IncidentRepository;
 import altn72.ras.repository.PrestataireRepository;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -45,6 +46,7 @@ public class IncidentService {
     }
 
     @Transactional
+    @PreAuthorize("hasRole('RESPONSABLE')")
     public void affecter(Long incidentId, Long prestataireId) {
         Incident incident = incidentRepository.findById(incidentId)
                 .orElseThrow(() -> new RessourceIntrouvableException("Incident introuvable : " + incidentId));
@@ -54,6 +56,7 @@ public class IncidentService {
     }
 
     @Transactional
+    @PreAuthorize("hasRole('RESPONSABLE')")
     public void resoudre(Long incidentId) {
         Incident incident = incidentRepository.findById(incidentId)
                 .orElseThrow(() -> new RessourceIntrouvableException("Incident introuvable : "+ incidentId));
@@ -73,6 +76,7 @@ public class IncidentService {
     }
 
     @Transactional
+    @PreAuthorize("hasRole('RESPONSABLE')")
     public void modifierDescription(Long incidentId, String description) {
         Incident incident = incidentRepository.findById(incidentId)
                 .orElseThrow(() -> new RessourceIntrouvableException("Incident introuvable : "+ incidentId));

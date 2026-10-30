@@ -8,6 +8,7 @@ import altn72.ras.modele.Station;
 import altn72.ras.modele.TypeEquipement;
 import altn72.ras.repository.EquipementRepository;
 import altn72.ras.repository.StationRepository;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,6 +27,7 @@ public class EquipementService {
     }
 
     @Transactional
+    @PreAuthorize("hasRole('RESPONSABLE')")
     public Equipement creer(String reference, String libelle, TypeEquipement type, Long stationId) {
         if (equipementRepository.existsByReference(reference)) {
             throw new RegleMetierException("Un équipement avec la référence " + reference + " existe déjà");

@@ -3,15 +3,19 @@ package altn72.ras.service;
 import altn72.ras.modele.*;
 import altn72.ras.repository.EquipementRepository;
 import altn72.ras.repository.StationRepository;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.transaction.annotation.Transactional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
 @Transactional
+@WithMockUser(roles = "RESPONSABLE")
 class IncidentServiceTest {
 
     @Autowired
@@ -43,5 +47,15 @@ class IncidentServiceTest {
         incidentService.resoudre(premier.getId());
 
         assertEquals(EtatFonctionnement.HORS_SERVICE, equipement.getEtat());
+    }
+
+    @Test
+    @WithMockUser(roles = "AGENT")
+    void unAgentNePeutPasResoudre() {
+        Equipement equipement = nouvelEquipement();
+        Incident incident = incidentService.declarer(equipement.getId(), "Panne");
+
+        assertThrows(AccessDeniedException.class,
+                () -> incidentService.resoudre(incident.getId()));
     }
 }

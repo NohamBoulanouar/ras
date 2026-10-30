@@ -6,6 +6,7 @@ import altn72.ras.modele.Evaluation;
 import altn72.ras.modele.Incident;
 import altn72.ras.repository.EvaluationRepository;
 import altn72.ras.repository.IncidentRepository;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,6 +30,7 @@ public class EvaluationService {
     }
 
     @Transactional
+    @PreAuthorize("hasRole('RESPONSABLE')")
     public Evaluation evaluer(Long incidentId, int note, String commentaire) {
         Incident incident = incidentRepository.findById(incidentId)
                 .orElseThrow(() -> new RessourceIntrouvableException("Incident introuvable : " + incidentId));
