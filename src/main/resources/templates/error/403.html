@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Accès refusé — RAS</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<header class="entete">
+    <a class="logo" th:href="@{/}">RAS</a>
+</header>
+<main class="contenu">
+    <div class="carte">
+        <h1>Accès refusé</h1>
+        <p class="alerte alerte-erreur">Cette action est réservée au responsable d'exploitation.</p>
+        <p><a class="bouton bouton-discret" th:href="@{/}">← Retour à l'accueil</a></p>
+    </div>
+</main>
+</body>
+</html>
