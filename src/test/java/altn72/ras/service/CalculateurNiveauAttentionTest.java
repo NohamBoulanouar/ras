@@ -12,7 +12,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class CalculateurNiveauAttentionTest {
 
-    // On fige "maintenant" à une date fixe
     private final Clock horlogeFixe = Clock.fixed(Instant.parse("2026-10-14T12:00:00Z"), ZoneOffset.UTC);
     private final LocalDateTime maintenant = LocalDateTime.now(horlogeFixe);
     private final CalculateurNiveauAttention calculateur = new CalculateurNiveauAttention(horlogeFixe);

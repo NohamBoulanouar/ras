@@ -16,7 +16,6 @@ import static altn72.ras.modele.NiveauAttention.VERT;
 @Component
 public class CalculateurNiveauAttention {
 
-    // Seuils de RG3, définis une seule fois (§7.3 : pas de nombres magiques)
     static final Duration SEUIL_ORANGE = Duration.ofHours(48);
     static final Duration SEUIL_ROUGE = Duration.ofHours(72);
 

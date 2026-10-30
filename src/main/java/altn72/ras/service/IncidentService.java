@@ -34,7 +34,6 @@ public class IncidentService {
         this.horloge = horloge;
     }
 
-    // F2 / RG1 : déclarer un incident -> l'équipement passe HORS_SERVICE
     @Transactional
     public Incident declarer(Long equipementId, String description) {
         Equipement equipement = equipementRepository.findById(equipementId)
@@ -45,7 +44,6 @@ public class IncidentService {
         return incidentRepository.save(incident);
     }
 
-    // F7 / RG5 : affecter ou réaffecter un prestataire
     @Transactional
     public void affecter(Long incidentId, Long prestataireId) {
         Incident incident = incidentRepository.findById(incidentId)
@@ -55,7 +53,6 @@ public class IncidentService {
         incident.affecter(prestataire);
     }
 
-    // F8 / RG5 : résoudre -> l'équipement repasse EN_SERVICE s'il n'a plus d'incident actif
     @Transactional
     public void resoudre(Long incidentId) {
         Incident incident = incidentRepository.findById(incidentId)
@@ -75,7 +72,6 @@ public class IncidentService {
         }
     }
 
-    // F6 : modifier la description (refusé si résolu)
     @Transactional
     public void modifierDescription(Long incidentId, String description) {
         Incident incident = incidentRepository.findById(incidentId)
@@ -88,12 +84,10 @@ public class IncidentService {
 
     }
 
-    // F11 / RG6 : incidents actifs
     public List<Incident> listerActifs() {
         return incidentRepository.trouverIncidentsActifs();
     }
 
-    // F9 / RG7 : historique des résolus
     public List<Incident> historique() {
         return incidentRepository.trouverHistoriqueResolus();
     }
