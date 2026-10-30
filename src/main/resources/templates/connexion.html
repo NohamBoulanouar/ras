@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Connexion — RAS</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body class="page-connexion">
+<main class="carte carte-connexion">
+    <h1>RAS <span>Rien À Signaler</span></h1>
+    <p class="sous-titre">Supervision des équipements du réseau</p>
+
+    <p class="alerte alerte-erreur" th:if="${param.error}">Identifiant ou mot de passe incorrect.</p>
+    <p class="alerte alerte-info" th:if="${param.deconnexion}">Vous êtes déconnecté.</p>
+
+    <form th:action="@{/connexion}" method="post">
+        <label for="username">Identifiant</label>
+        <input id="username" name="username" type="text" autocomplete="username" required autofocus>
+
+        <label for="password">Mot de passe</label>
+        <input id="password" name="password" type="password" autocomplete="current-password" required>
+
+        <button type="submit" class="bouton bouton-principal">Se connecter</button>
+    </form>
+</main>
+</body>
+</html>
