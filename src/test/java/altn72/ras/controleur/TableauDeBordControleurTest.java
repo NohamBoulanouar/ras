@@ -54,6 +54,15 @@ class TableauDeBordControleurTest {
     }
 
     @Test
+    void leTableauDeBordSignaleLesIncidentsDUnEquipementFragile() throws Exception {
+        mockMvc.perform(get("/tableau-de-bord").param("niveau", "VERT").with(responsable()))
+                .andExpect(content().string(containsString("ASC-GC-01")))
+                .andExpect(content().string(containsString("Équipement fragile")));
+        mockMvc.perform(get("/tableau-de-bord").param("niveau", "ROUGE").with(responsable()))
+                .andExpect(content().string(not(containsString("Équipement fragile"))));
+    }
+
+    @Test
     void lAgentNAccedePasAuTableauDeBord() throws Exception {
         mockMvc.perform(get("/tableau-de-bord").with(agent()))
                 .andExpect(status().isForbidden());

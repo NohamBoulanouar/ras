@@ -9,11 +9,13 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
 import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.not;
 import static altn72.ras.controleur.UtilisateursDeTest.agent;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.flash;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrlPattern;
@@ -58,7 +60,23 @@ class EquipementControleurTest {
     void lAgentDeclareUnIncident() throws Exception {
         Long id = idDe("POR-BE-03");
         mockMvc.perform(post("/equipements/{id}/declarer", id).param("description", "Lecteur de badge HS").with(agent()).with(csrf()))
-                .andExpect(redirectedUrlPattern("/incidents/*"));
+                .andExpect(redirectedUrlPattern("/incidents/*"))
+                .andExpect(flash().attribute("succes", not(containsString("fragile"))));
+    }
+
+    @Test
+    void laTroisiemeDeclarationEnTrenteJoursSignaleUnEquipementFragile() throws Exception {
+        Long id = idDe("ECR-TI-02");
+        mockMvc.perform(post("/equipements/{id}/declarer", id).param("description", "Écran à nouveau éteint").with(agent()).with(csrf()))
+                .andExpect(flash().attribute("succes", containsString("fragile")));
+    }
+
+    @Test
+    void laFicheAfficheLeBadgeSeulementPourUnEquipementFragile() throws Exception {
+        mockMvc.perform(get("/equipements/{id}", idDe("ASC-GC-01")).with(agent()))
+                .andExpect(content().string(containsString("Équipement fragile")));
+        mockMvc.perform(get("/equipements/{id}", idDe("POR-BE-03")).with(agent()))
+                .andExpect(content().string(not(containsString("Équipement fragile"))));
     }
 
     @Test

@@ -96,6 +96,11 @@ public class DonneesDemo implements CommandLineRunner {
         ascenseurResolu.resoudre(ilYa(120));
         incidentRepository.save(ascenseurResolu);
 
+        Incident ascenseurAncien = new Incident(ascGc01, "Porte palière bloquée en position ouverte", ilYa(480));
+        ascenseurAncien.affecter(elevatec);
+        ascenseurAncien.resoudre(ilYa(470));
+        incidentRepository.save(ascenseurAncien);
+
         Incident ecranResolu = new Incident(ecrTi02, "Affichage figé, redémarré par l'équipe de station", ilYa(72));
         ecranResolu.resoudre(ilYa(48));
         incidentRepository.save(ecranResolu);

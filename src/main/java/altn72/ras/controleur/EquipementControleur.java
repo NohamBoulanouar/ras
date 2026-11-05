@@ -29,6 +29,7 @@ public class EquipementControleur {
     public String fiche(@PathVariable Long id, Model model) {
         model.addAttribute("equipement", equipementService.trouver(id));
         model.addAttribute("incidents", incidentService.listerParEquipement(id));
+        model.addAttribute("fragile", equipementService.estFragile(id));
         return "equipement";
     }
 
@@ -50,7 +51,15 @@ public class EquipementControleur {
             return "declarer";
         }
         Incident incident = incidentService.declarer(id, formulaire.getDescription().strip());
-        redirection.addFlashAttribute("succes", "Incident déclaré : l'équipement est passé hors service.");
+        redirection.addFlashAttribute("succes", messageDeDeclaration(id));
         return "redirect:/incidents/" + incident.getId();
+    }
+
+    private String messageDeDeclaration(Long equipementId) {
+        String message = "Incident déclaré : l'équipement est passé hors service.";
+        if (equipementService.estFragile(equipementId)) {
+            message += " Attention : cet équipement est désormais fragile (au moins 3 incidents en 30 jours).";
+        }
+        return message;
     }
 }

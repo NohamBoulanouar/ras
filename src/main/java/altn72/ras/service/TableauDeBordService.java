@@ -27,13 +27,16 @@ public class TableauDeBordService {
     private final IncidentRepository incidentRepository;
     private final IncidentService incidentService;
     private final CalculateurNiveauAttention calculateurNiveauAttention;
+    private final EquipementService equipementService;
 
     public TableauDeBordService(IncidentRepository incidentRepository,
                                 IncidentService incidentService,
-                                CalculateurNiveauAttention calculateurNiveauAttention) {
+                                CalculateurNiveauAttention calculateurNiveauAttention,
+                                EquipementService equipementService) {
         this.incidentRepository = incidentRepository;
         this.incidentService = incidentService;
         this.calculateurNiveauAttention = calculateurNiveauAttention;
+        this.equipementService = equipementService;
     }
 
     @PreAuthorize("hasRole('RESPONSABLE')")
@@ -57,6 +60,7 @@ public class TableauDeBordService {
 
     private LigneTableauDeBord enLigne(Incident incident) {
         return new LigneTableauDeBord(incident, calculateurNiveauAttention.calculer(incident),
-                incidentService.dureeOuverture(incident));
+                incidentService.dureeOuverture(incident),
+                equipementService.estFragile(incident.getEquipement().getId()));
     }
 }

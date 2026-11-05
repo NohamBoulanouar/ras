@@ -159,3 +159,6 @@ h2 { margin-top: 2rem; }
 .ligne-pris_en_charge td:first-child { border-left: 4px solid var(--pris-en-charge); }
 .ligne-pris_en_charge { background: #f7f4fd; }
 .vide { color: var(--texte-doux); text-align: center; padding: 1rem; }
+
+/* Équipement fragile : au moins 3 incidents en 30 jours */
+.badge-fragile { background: #fff4e5; color: #9a3412; border: 1px solid #f59e0b; }

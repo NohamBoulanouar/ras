@@ -5,5 +5,6 @@ import altn72.ras.modele.NiveauAttention;
 
 import java.time.Duration;
 
-public record LigneTableauDeBord(Incident incident, NiveauAttention niveau, Duration dureeOuverture) {
+public record LigneTableauDeBord(Incident incident, NiveauAttention niveau, Duration dureeOuverture,
+                                 boolean equipementFragile) {
 }

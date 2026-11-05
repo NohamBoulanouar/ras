@@ -96,7 +96,7 @@ flowchart TD
 
 ## TESTS
 
-- **Commande :** `./mvnw verify`. Elle lance 61 tests sur une base H2 en mémoire, donc sans MariaDB, puis mesure la couverture avec JaCoCo. Le build échoue sous **80 % des lignes couvertes**. Couverture actuelle : environ 95 % des lignes et 86 % des branches. Le rapport se trouve dans `target/site/jacoco/index.html`.
+- **Commande :** `./mvnw verify`. Elle lance 71 tests sur une base H2 en mémoire, donc sans MariaDB, puis mesure la couverture avec JaCoCo. Le build échoue sous **80 % des lignes couvertes**. Couverture actuelle : environ 95 % des lignes et 87 % des branches. Le rapport se trouve dans `target/site/jacoco/index.html`.
 - **Intégration continue :** GitHub Actions lance `mvnw verify` à chaque push et publie le rapport de couverture.
 
 ### Stratégie (pyramide de tests)
@@ -231,7 +231,7 @@ Si une `RegleMetierException` est levée, la transaction est annulée : aucune d
   - horloge injectée pour rendre les seuils testables à la minute près ;
   - tests de services sur la vraie configuration Spring avec H2, plutôt que des mocks, pour vérifier aussi les requêtes et les transactions ;
   - `@Transactional` sur les classes de test, pour que chaque test reparte des données de démonstration.
-- **Ce qui fonctionne :** 61 tests verts, environ 95 % des lignes couvertes, CI verte.
+- **Ce qui fonctionne :** 71 tests verts, environ 95 % des lignes couvertes, CI verte.
 - **Difficultés :** les tests web tombaient sur la page de connexion. Il a fallu simuler l'utilisateur connecté avec `SecurityMockMvcRequestPostProcessors.user(...)` (pages) et `httpBasic(...)` (API).
 - **Reste à faire :** Testcontainers pour tester sur une vraie MariaDB.
 
@@ -249,6 +249,37 @@ Si une `RegleMetierException` est levée, la transaction est annulée : aucune d
 - **Limites :** l'export porte sur tout l'historique, sans filtre de période ; il n'y a pas d'import.
 
 ---
+
+## Évolution séance finale
+
+### Évolution réalisée : « Équipement fragile »
+Un équipement est **fragile** s'il a eu **au moins 3 incidents ouverts durant les 30 derniers jours**, quel que soit leur statut.
+
+| Fichier | Rôle |
+|---|---|
+| `service/DetecteurEquipementFragile` | La règle (EF1 à EF5) : seuil `SEUIL_INCIDENTS = 3` et fenêtre `FENETRE = 30 jours`, définis une seule fois, et horloge injectée. |
+| `service/EquipementService.estFragile(id)` | Récupère les incidents **de cet équipement seulement**, puis interroge le détecteur. |
+| `service/TableauDeBordService`, `LigneTableauDeBord` | Chaque ligne du tableau de bord indique si l'équipement est fragile. |
+| `controleur/EquipementControleur` | Badge sur la fiche équipement, et message de confirmation de la déclaration contenant « fragile » quand c'est le cas. |
+| `templates/equipement.html`, `templates/tableau-de-bord.html`, `style.css` | Badge « Équipement fragile ». |
+| `config/DonneesDemo` | Un incident résolu de plus sur `ASC-GC-01` (il y a 20 jours) : cet équipement est fragile dans la démonstration. |
+
+### Choix de conception
+- **La règle vit dans la couche service (EF6)**, dans un composant dédié, sur le modèle du `CalculateurNiveauAttention` (responsabilité unique).
+- **Le détecteur reçoit la liste des incidents** au lieu d'interroger la base lui-même. On peut ainsi tester tous les cas limites sans base, avec une horloge figée (`Clock.fixed`). Le service, lui, ne lui transmet que les incidents de l'équipement concerné : aucune contamination entre équipements.
+- **Rien n'est enregistré (EF4)** : le caractère fragile est recalculé à chaque consultation à partir de l'heure courante, donc la fenêtre glisse d'elle-même.
+- **Borne incluse (EF1)** : un incident compte si sa date d'ouverture n'est pas antérieure à « maintenant − 30 jours » (`!isBefore`). Il est donc compté à 29 j 23 h 59 et ne l'est plus à 30 j 1 min.
+- **Raccourci pris :** le comptage est fait en Java sur la liste des incidents de l'équipement, réutilisant une requête existante, plutôt qu'avec une requête `COUNT` dédiée. C'est plus simple à tester, mais moins efficace si un équipement accumule des centaines d'incidents.
+
+### Tests ajoutés
+- `DetecteurEquipementFragileTest` (unitaires, horloge figée) : 2 incidents → non fragile ; 3 → fragile ; 3 dont 1 résolu → fragile ; un incident à 30 j 1 min → non compté ; à 29 j 23 h 59 → compté ; 2 récents + 5 de 45 jours → non fragile.
+- `EquipementServiceTest.lEquipementVoisinNEstPasContamine` : 3 incidents sur un équipement et 1 sur son voisin ; seul le premier est fragile.
+- `EquipementControleurTest` : badge présent sur la fiche d'un équipement fragile et absent sinon ; message de déclaration contenant « fragile » à la 3ᵉ déclaration en 30 jours, et ne le contenant pas sinon.
+- `TableauDeBordControleurTest.leTableauDeBordSignaleLesIncidentsDUnEquipementFragile`.
+
+### Limites connues
+- Le tableau de bord calcule le caractère fragile pour chaque incident actif, avec une requête par ligne. C'est sans conséquence avec quelques dizaines d'incidents, mais il faudrait regrouper le calcul par équipement, ou utiliser une requête d'agrégation, sur un gros réseau.
+- L'API REST n'expose pas encore l'information « fragile ».
 
 ## BILAN
 

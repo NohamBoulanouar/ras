@@ -3,9 +3,11 @@ package altn72.ras.service;
 import altn72.ras.exception.RegleMetierException;
 import altn72.ras.exception.RessourceIntrouvableException;
 import altn72.ras.modele.Equipement;
+import altn72.ras.modele.Incident;
 import altn72.ras.modele.Station;
 import altn72.ras.modele.TypeEquipement;
 import altn72.ras.repository.EquipementRepository;
+import altn72.ras.repository.IncidentRepository;
 import altn72.ras.repository.StationRepository;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
@@ -18,11 +20,17 @@ public class EquipementService {
 
     private final EquipementRepository equipementRepository;
     private final StationRepository stationRepository;
+    private final IncidentRepository incidentRepository;
+    private final DetecteurEquipementFragile detecteurEquipementFragile;
 
     public EquipementService(EquipementRepository equipementRepository,
-                             StationRepository stationRepository) {
+                             StationRepository stationRepository,
+                             IncidentRepository incidentRepository,
+                             DetecteurEquipementFragile detecteurEquipementFragile) {
         this.equipementRepository = equipementRepository;
         this.stationRepository = stationRepository;
+        this.incidentRepository = incidentRepository;
+        this.detecteurEquipementFragile = detecteurEquipementFragile;
     }
 
     @Transactional
@@ -46,5 +54,10 @@ public class EquipementService {
 
     public List<Equipement> listerParStation(Long stationId) {
         return equipementRepository.findByStationIdOrderByReferenceAsc(stationId);
+    }
+
+    public boolean estFragile(Long equipementId) {
+        List<Incident> incidents = incidentRepository.findByEquipementIdOrderByDateOuvertureDesc(equipementId);
+        return detecteurEquipementFragile.estFragile(incidents);
     }
 }
