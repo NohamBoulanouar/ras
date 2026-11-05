@@ -45,7 +45,7 @@ public class DonneesDemo implements CommandLineRunner {
                 new Prestataire("Élévatec", "contact@elevatec.example", "01 23 45 67 89"));
         Prestataire portisys = prestataireRepository.save(
                 new Prestataire("Portisys", "contact@portisys.example", "01 42 53 26 47"));
-        Prestataire viviotech = prestataireRepository.save(
+        prestataireRepository.save(
                 new Prestataire("Visiotech", "contact@visiotech.example", "01 25 53 54 06"));
 
         Equipement ascGc01 = equipementRepository.save(
