@@ -142,3 +142,20 @@ h2 { margin-top: 2rem; }
 .bouton-succes { background: var(--vert); color: #fff; }
 .aide { color: var(--texte-doux); font-size: 0.92rem; margin: 0 0 0.5rem; }
 .note-moyenne { font-size: 1.1rem; }
+
+/* Tableau de bord */
+.indicateurs { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 1.5rem; }
+.indicateur { display: flex; flex-direction: column; }
+.indicateur-valeur { font-size: 2rem; font-weight: 700; color: var(--principal); }
+.indicateur-alerte .indicateur-valeur { color: var(--rouge); }
+.indicateur-libelle { color: var(--texte-doux); }
+.filtres { display: flex; flex-wrap: wrap; gap: 1rem; align-items: flex-end; margin-bottom: 1.5rem; }
+.filtres label { margin-top: 0; }
+.filtres select { min-width: 200px; }
+.filtres-boutons { display: flex; gap: 0.5rem; }
+.ligne-rouge td:first-child { border-left: 4px solid var(--rouge); }
+.ligne-orange td:first-child { border-left: 4px solid var(--orange); }
+.ligne-vert td:first-child { border-left: 4px solid var(--vert); }
+.ligne-pris_en_charge td:first-child { border-left: 4px solid var(--pris-en-charge); }
+.ligne-pris_en_charge { background: #f7f4fd; }
+.vide { color: var(--texte-doux); text-align: center; padding: 1rem; }

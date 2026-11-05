@@ -28,15 +28,18 @@ public class IncidentControleur {
     private final EvaluationService evaluationService;
     private final PrestataireService prestataireService;
     private final CalculateurNiveauAttention calculateurNiveauAttention;
+    private final FormatDuree formatDuree;
 
     public IncidentControleur(IncidentService incidentService,
                               EvaluationService evaluationService,
                               PrestataireService prestataireService,
-                              CalculateurNiveauAttention calculateurNiveauAttention) {
+                              CalculateurNiveauAttention calculateurNiveauAttention,
+                              FormatDuree formatDuree) {
         this.incidentService = incidentService;
         this.evaluationService = evaluationService;
         this.prestataireService = prestataireService;
         this.calculateurNiveauAttention = calculateurNiveauAttention;
+        this.formatDuree = formatDuree;
     }
 
     @GetMapping
@@ -101,7 +104,7 @@ public class IncidentControleur {
 
     private void remplirDetail(Incident incident, Model model) {
         model.addAttribute("incident", incident);
-        model.addAttribute("dureeOuverture", FormatDuree.enTexte(incidentService.dureeOuverture(incident)));
+        model.addAttribute("dureeOuverture", formatDuree.enTexte(incidentService.dureeOuverture(incident)));
         model.addAttribute("niveau", incident.estResolu() ? null : calculateurNiveauAttention.calculer(incident));
         model.addAttribute("evaluation", evaluationService.trouverParIncident(incident.getId()).orElse(null));
         model.addAttribute("prestataires", prestataireService.lister());

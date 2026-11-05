@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Tableau de bord — RAS</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<header th:replace="~{fragments/entete :: entete}"></header>
+<main class="contenu">
+    <h1>Tableau de bord des incidents actifs</h1>
+
+    <section class="indicateurs">
+        <div class="carte indicateur">
+            <span class="indicateur-valeur" th:text="${indicateurs.incidentsActifs()}">8</span>
+            <span class="indicateur-libelle">incidents actifs</span>
+        </div>
+        <div class="carte indicateur">
+            <span class="indicateur-valeur" th:text="${indicateurs.enAttenteDAffectation()}">6</span>
+            <span class="indicateur-libelle">en attente d'affectation</span>
+        </div>
+        <div class="carte indicateur indicateur-alerte">
+            <span class="indicateur-valeur" th:text="${indicateurs.incidentsRouges()}">2</span>
+            <span class="indicateur-libelle">en rouge (72 h et plus)</span>
+        </div>
+    </section>
+
+    <form class="filtres" th:action="@{/tableau-de-bord}" method="get">
+        <div>
+            <label for="station">Station</label>
+            <select id="station" name="station">
+                <option value="">Toutes les stations</option>
+                <option th:each="s : ${stations}" th:value="${s.id}" th:text="${s.nom}"
+                        th:selected="${stationChoisie != null and stationChoisie == s.id}">Gare Centrale</option>
+            </select>
+        </div>
+        <div>
+            <label for="niveau">Niveau d'attention</label>
+            <select id="niveau" name="niveau">
+                <option value="">Tous les niveaux</option>
+                <option th:each="n : ${niveaux}" th:value="${n.name()}" th:text="${n.libelle}"
+                        th:selected="${niveauChoisi == n}">Moins de 48 h</option>
+            </select>
+        </div>
+        <div class="filtres-boutons">
+            <button type="submit" class="bouton bouton-action">Filtrer</button>
+            <a class="bouton bouton-discret" th:href="@{/tableau-de-bord}">Réinitialiser</a>
+        </div>
+    </form>
+
+    <table class="tableau">
+        <thead>
+        <tr>
+            <th>Niveau</th>
+            <th>Ouvert depuis</th>
+            <th>Station</th>
+            <th>Équipement</th>
+            <th>Description</th>
+            <th>Prestataire</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="ligne : ${lignes}" th:classappend="|ligne-${#strings.toLowerCase(ligne.niveau().name())}|">
+            <td><span class="badge" th:classappend="|badge-${#strings.toLowerCase(ligne.niveau().name())}|"
+                      th:text="${ligne.niveau().libelle}">72 h et plus</span></td>
+            <td th:text="${@formatDuree.enTexte(ligne.dureeOuverture())}">3 j 2 h</td>
+            <td th:text="${ligne.incident().equipement.station.nom}">Gare Centrale</td>
+            <td th:text="|${ligne.incident().equipement.reference} — ${ligne.incident().equipement.type.libelle}|">ASC-GC-01 — Ascenseur</td>
+            <td th:text="${ligne.incident().description}">Panne</td>
+            <td th:text="${ligne.incident().prestataire != null} ? ${ligne.incident().prestataire.nom} : '—'">Élévatec</td>
+            <td><a class="bouton bouton-discret" th:href="@{/incidents/{id}(id=${ligne.incident().id})}">Détail</a></td>
+        </tr>
+        </tbody>
+    </table>
+    <p th:if="${#lists.isEmpty(lignes)}" class="vide">Rien à signaler : aucun incident actif ne correspond à ces critères.</p>
+</main>
+</body>
+</html>
