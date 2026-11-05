@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 
 import java.security.Principal;
 
-@ControllerAdvice
+@ControllerAdvice(basePackages = "altn72.ras.controleur")
 public class UtilisateurConnecteAdvice {
 
     private final UtilisateurRepository utilisateurRepository;
