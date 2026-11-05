@@ -288,6 +288,7 @@ Un équipement est **fragile** s'il a eu **au moins 3 incidents ouverts durant l
   - séance 2 : calculateur de niveau d'attention, méthodes métier `Incident.affecter()` / `resoudre()` et services `IncidentService`, avec leurs tests ;
   - séance 3 : `EvaluationService`, `EquipementService`, sécurité (connexion, droits `@PreAuthorize`), gestion des erreurs, premiers écrans ;
   - fin du projet : écrans de détail, d'historique et de tableau de bord, API REST, export CSV, tests web et repository, JaCoCo et ce journal.
+- **Outils utilisés :** j'ai utilisé un assistant IA (Claude) comme tuteur pendant les séances, puis pour m'aider à terminer les écrans, l'API, les tests web, le déploiement et l'évolution « équipement fragile ». J'ai relu et vérifié l'ensemble du code.
 - **Plus grande difficulté :** avancer seule à un rythme suffisant. J'ai passé beaucoup de temps à bien comprendre les tests et la couche service (par exemple pourquoi `estAffecte()` ne convient pas pour savoir si un incident résolu avait un prestataire), et j'ai pris du retard sur les écrans. Je l'ai surmonté en priorisant le socle (règles métier testées) avant l'interface.
 - **Non réalisé :**
   - un écran de création d'équipement ;
