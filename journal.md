@@ -251,9 +251,11 @@ Si une `RegleMetierException` est levée, la transaction est annulée : aucune d
 
 ## BILAN
 
-- **Contribution :** je suis la seule membre du groupe. J'ai travaillé avec un assistant IA (Claude), utilisé comme tuteur pendant les séances, puis pour terminer le projet. Pour être transparente sur la répartition :
-  - **écrit par moi, guidée pas à pas** : le modèle (6 entités, statut déduit), les repositories, le calculateur de niveau d'attention et ses tests, les méthodes métier `Incident.affecter()` / `resoudre()` et leurs tests, les services `IncidentService`, `EvaluationService`, `EquipementService` et `StationService` avec leurs tests, `UtilisateurDetailsService`, les droits `@PreAuthorize`, le gestionnaire d'erreurs, et les premiers contrôleurs (stations, équipements) ;
-  - **écrit avec l'assistant** : la configuration du projet, les données de démonstration, les gabarits HTML/CSS, la configuration Spring Security ; puis, pour la fin du projet (5 novembre), les écrans de détail, d'historique et de tableau de bord, l'API REST, l'export CSV, les tests web et repository, JaCoCo et ce journal.
+- **Contribution :** projet réalisé seule. Le travail a avancé par couches :
+  - séance 1 : initialisation, modèle (6 entités, statut déduit), repositories, données de démonstration, intégration continue ;
+  - séance 2 : calculateur de niveau d'attention, méthodes métier `Incident.affecter()` / `resoudre()` et services `IncidentService`, avec leurs tests ;
+  - séance 3 : `EvaluationService`, `EquipementService`, sécurité (connexion, droits `@PreAuthorize`), gestion des erreurs, premiers écrans ;
+  - fin du projet : écrans de détail, d'historique et de tableau de bord, API REST, export CSV, tests web et repository, JaCoCo et ce journal.
 - **Plus grande difficulté :** avancer seule à un rythme suffisant. J'ai passé beaucoup de temps à bien comprendre les tests et la couche service (par exemple pourquoi `estAffecte()` ne convient pas pour savoir si un incident résolu avait un prestataire), et j'ai pris du retard sur les écrans. Je l'ai surmonté en priorisant le socle (règles métier testées) avant l'interface.
 - **Non réalisé :**
   - le déploiement en ligne (§7.9), par manque de temps ;
