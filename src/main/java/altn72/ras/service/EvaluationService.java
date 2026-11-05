@@ -38,19 +38,19 @@ public class EvaluationService {
                 .orElseThrow(() -> new RessourceIntrouvableException("Incident introuvable : " + incidentId));
 
         if (!incident.estResolu()) {
-            throw new RegleMetierException("Impossible d'évaluer un incident non résolu");
+            throw new RegleMetierException("Impossible d'évaluer un incident non résolu.");
         }
 
         if (incident.getPrestataire() == null) {
-            throw new RegleMetierException("Impossible d'évaluer : l'incident a été résolu sans prestataire");
+            throw new RegleMetierException("Impossible d'évaluer : l'incident a été résolu sans prestataire.");
         }
 
         if (evaluationRepository.existsByIncidentId(incidentId)) {
-            throw new RegleMetierException("Cet incident a déjà été évalué");
+            throw new RegleMetierException("Cet incident a déjà été évalué.");
         }
 
         if (note < 1 || note > 5) {
-            throw new RegleMetierException("La note doit être comprise entre 1 et 5");
+            throw new RegleMetierException("La note doit être comprise entre 1 et 5.");
         }
 
         Evaluation evaluation = new Evaluation(incident, note, commentaire, LocalDateTime.now(horloge));

@@ -1,6 +1,5 @@
 package altn72.ras.service;
 
-
 import altn72.ras.exception.RegleMetierException;
 import altn72.ras.exception.RessourceIntrouvableException;
 import altn72.ras.modele.Equipement;
@@ -30,7 +29,7 @@ public class EquipementService {
     @PreAuthorize("hasRole('RESPONSABLE')")
     public Equipement creer(String reference, String libelle, TypeEquipement type, Long stationId) {
         if (equipementRepository.existsByReference(reference)) {
-            throw new RegleMetierException("Un équipement avec la référence " + reference + " existe déjà");
+            throw new RegleMetierException("Un équipement avec la référence " + reference + " existe déjà.");
         }
 
         Station station = stationRepository.findById(stationId)

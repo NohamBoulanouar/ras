@@ -68,8 +68,8 @@ public class Incident {
     }
 
     public void affecter(Prestataire prestataire) {
-        if (estResolu()){
-            throw new RegleMetierException("Incident déjà résolu");
+        if (estResolu()) {
+            throw new RegleMetierException("Impossible d'affecter un prestataire : l'incident est déjà résolu.");
         }
         this.prestataire = prestataire;
     }
@@ -79,11 +79,11 @@ public class Incident {
     }
 
     public void resoudre(LocalDateTime dateResolution) {
-        if (estResolu()){
-            throw new RegleMetierException("Incident déjà résolu");
+        if (estResolu()) {
+            throw new RegleMetierException("L'incident est déjà résolu.");
         }
         if (dateResolution.isBefore(dateOuverture)) {
-            throw new RegleMetierException("La date de résolution ne peut pas être antérieure à l’ouverture");
+            throw new RegleMetierException("La date de résolution ne peut pas être antérieure à son ouverture.");
         }
         this.dateResolution = dateResolution;
     }

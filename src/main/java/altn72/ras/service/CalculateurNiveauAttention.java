@@ -26,14 +26,14 @@ public class CalculateurNiveauAttention {
     }
 
     public NiveauAttention calculer(Incident incident) {
-        if (incident.estAffecte()){
+        if (incident.estAffecte()) {
             return PRIS_EN_CHARGE;
         }
         Duration age = Duration.between(incident.getDateOuverture(), LocalDateTime.now(horloge));
         if (age.compareTo(SEUIL_ROUGE) >= 0) {
             return ROUGE;
         }
-        if (age.compareTo(SEUIL_ORANGE) >= 0){
+        if (age.compareTo(SEUIL_ORANGE) >= 0) {
             return ORANGE;
         }
         return VERT;

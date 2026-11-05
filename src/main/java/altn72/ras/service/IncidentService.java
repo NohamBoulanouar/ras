@@ -49,8 +49,7 @@ public class IncidentService {
     @Transactional
     @PreAuthorize("hasRole('RESPONSABLE')")
     public void affecter(Long incidentId, Long prestataireId) {
-        Incident incident = incidentRepository.findById(incidentId)
-                .orElseThrow(() -> new RessourceIntrouvableException("Incident introuvable : " + incidentId));
+        Incident incident = trouver(incidentId);
         Prestataire prestataire = prestataireRepository.findById(prestataireId)
                 .orElseThrow(() -> new RessourceIntrouvableException("Prestataire introuvable : " + prestataireId));
         incident.affecter(prestataire);
@@ -59,15 +58,14 @@ public class IncidentService {
     @Transactional
     @PreAuthorize("hasRole('RESPONSABLE')")
     public void resoudre(Long incidentId) {
-        Incident incident = incidentRepository.findById(incidentId)
-                .orElseThrow(() -> new RessourceIntrouvableException("Incident introuvable : "+ incidentId));
+        Incident incident = trouver(incidentId);
         incident.resoudre(LocalDateTime.now(horloge));
 
         Equipement equipement = incident.getEquipement();
         List<Incident> incidentsDeLEquipement = incidentRepository.findByEquipementIdOrderByDateOuvertureDesc(equipement.getId());
         boolean encoreEnPanne = false;
         for (Incident i : incidentsDeLEquipement) {
-            if (!i.estResolu()){
+            if (!i.estResolu()) {
                 encoreEnPanne = true;
             }
         }
@@ -79,14 +77,12 @@ public class IncidentService {
     @Transactional
     @PreAuthorize("hasRole('RESPONSABLE')")
     public void modifierDescription(Long incidentId, String description) {
-        Incident incident = incidentRepository.findById(incidentId)
-                .orElseThrow(() -> new RessourceIntrouvableException("Incident introuvable : "+ incidentId));
+        Incident incident = trouver(incidentId);
 
         if (incident.estResolu()) {
-            throw new RegleMetierException("Impossible de modifier un incident déjà résolu");
+            throw new RegleMetierException("Impossible de modifier un incident déjà résolu.");
         }
         incident.setDescription(description);
-
     }
 
     public Incident trouver(Long incidentId) {

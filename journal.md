@@ -96,7 +96,7 @@ flowchart TD
 
 ## TESTS
 
-- **Commande :** `./mvnw verify`. Elle lance 61 tests sur une base H2 en mémoire, donc sans MariaDB, puis mesure la couverture avec JaCoCo. Le build échoue sous **80 % des lignes couvertes**. Couverture actuelle : environ 89 % des lignes et 83 % des branches. Le rapport se trouve dans `target/site/jacoco/index.html`.
+- **Commande :** `./mvnw verify`. Elle lance 61 tests sur une base H2 en mémoire, donc sans MariaDB, puis mesure la couverture avec JaCoCo. Le build échoue sous **80 % des lignes couvertes**. Couverture actuelle : environ 95 % des lignes et 86 % des branches. Le rapport se trouve dans `target/site/jacoco/index.html`.
 - **Intégration continue :** GitHub Actions lance `mvnw verify` à chaque push et publie le rapport de couverture.
 
 ### Stratégie (pyramide de tests)
@@ -231,7 +231,7 @@ Si une `RegleMetierException` est levée, la transaction est annulée : aucune d
   - horloge injectée pour rendre les seuils testables à la minute près ;
   - tests de services sur la vraie configuration Spring avec H2, plutôt que des mocks, pour vérifier aussi les requêtes et les transactions ;
   - `@Transactional` sur les classes de test, pour que chaque test reparte des données de démonstration.
-- **Ce qui fonctionne :** 61 tests verts, environ 89 % des lignes couvertes, CI verte.
+- **Ce qui fonctionne :** 61 tests verts, environ 95 % des lignes couvertes, CI verte.
 - **Difficultés :** les tests web tombaient sur la page de connexion. Il a fallu simuler l'utilisateur connecté avec `SecurityMockMvcRequestPostProcessors.user(...)` (pages) et `httpBasic(...)` (API).
 - **Reste à faire :** Testcontainers pour tester sur une vraie MariaDB.
 
