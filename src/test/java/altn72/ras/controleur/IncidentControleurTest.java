@@ -115,6 +115,40 @@ class IncidentControleurTest {
                 .andExpect(content().string(containsString("4,0 / 5")));
     }
 
+    @Test
+    void leResponsableModifieLaDescriptionDUnIncidentEnCours() throws Exception {
+        Incident incident = incidentOuvertSur("POR-BE-03");
+
+        mockMvc.perform(post("/incidents/{id}/description", incident.getId())
+                        .param("description", "Lecteur de titres hors service").with(responsable()).with(csrf()))
+                .andExpect(redirectedUrl("/incidents/" + incident.getId()));
+
+        assertThat(incidentRepository.findById(incident.getId()).orElseThrow().getDescription())
+                .isEqualTo("Lecteur de titres hors service");
+    }
+
+    @Test
+    void uneDescriptionVideEstRefuseeAvecUnMessage() throws Exception {
+        Incident incident = incidentOuvertSur("POR-BE-03");
+
+        mockMvc.perform(post("/incidents/{id}/description", incident.getId())
+                        .param("description", "").with(responsable()).with(csrf()))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("La description ne peut pas être vide.")));
+    }
+
+    @Test
+    void laFicheDUnPrestataireListeSesInterventions() throws Exception {
+        Long prestataireId = prestataireRepository.findAllByOrderByNomAsc().stream()
+                .filter(prestataire -> prestataire.getNom().equals("Portisys"))
+                .findFirst().orElseThrow().getId();
+
+        mockMvc.perform(get("/prestataires/{id}", prestataireId).with(agent()))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("Écran tactile du distributeur fissuré")))
+                .andExpect(content().string(containsString("4,0 / 5")));
+    }
+
     private Incident incidentOuvertSur(String reference) {
         return premierIncident(incident -> !incident.estResolu()
                 && incident.getEquipement().getReference().equals(reference));

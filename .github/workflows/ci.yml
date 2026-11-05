@@ -1,4 +1,4 @@
-# Integration continue (lot alpha, piste 7) : les tests tournent a chaque push
+# Integration continue (lot alpha, piste 7) : les tests et la mesure de couverture tournent a chaque push
 name: Tests
 
 on:
@@ -21,7 +21,14 @@ jobs:
           java-version: '21'
           cache: maven
 
-      - name: Compiler et lancer les tests
+      - name: Compiler, lancer les tests et verifier la couverture (JaCoCo, 80 % des lignes minimum)
         run: |
           chmod +x mvnw
           ./mvnw -B verify
+
+      - name: Publier le rapport de couverture
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: rapport-couverture-jacoco
+          path: target/site/jacoco/

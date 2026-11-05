@@ -68,6 +68,21 @@ class EquipementControleurTest {
                 .andExpect(content().string(containsString("Équipement introuvable : 9999")));
     }
 
+    @Test
+    void lesStationsEtLeursEquipementsSontConsultables() throws Exception {
+        mockMvc.perform(get("/stations").with(agent()))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("Belvédère")));
+
+        Long stationId = equipementRepository.findAll().stream()
+                .filter(equipement -> equipement.getReference().equals("ASC-BE-01"))
+                .findFirst().orElseThrow().getStation().getId();
+        mockMvc.perform(get("/stations/{id}", stationId).with(agent()))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("ASC-BE-01")))
+                .andExpect(content().string(containsString("Hors service")));
+    }
+
     private Long idDe(String reference) {
         return equipementRepository.findAll().stream()
                 .filter(equipement -> equipement.getReference().equals(reference))
