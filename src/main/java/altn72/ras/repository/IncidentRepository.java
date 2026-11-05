@@ -11,6 +11,8 @@ public interface IncidentRepository extends JpaRepository<Incident,Long> {
 
     List<Incident> findByEquipementIdOrderByDateOuvertureDesc(Long equipementId);
 
+    List<Incident> findByPrestataireIdOrderByDateOuvertureDesc(Long prestataireId);
+
     @Query("SELECT i FROM Incident i WHERE i.dateResolution IS NULL")
     List<Incident> trouverIncidentsActifs();
 

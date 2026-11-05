@@ -1,6 +1,7 @@
 package altn72.ras.controleur;
 
 import altn72.ras.controleur.formulaire.DeclarationIncidentFormulaire;
+import altn72.ras.modele.Incident;
 import altn72.ras.service.EquipementService;
 import altn72.ras.service.IncidentService;
 import jakarta.validation.Valid;
@@ -48,8 +49,8 @@ public class EquipementControleur {
             model.addAttribute("equipement", equipementService.trouver(id));
             return "declarer";
         }
-        incidentService.declarer(id, formulaire.getDescription().strip());
+        Incident incident = incidentService.declarer(id, formulaire.getDescription().strip());
         redirection.addFlashAttribute("succes", "Incident déclaré : l'équipement est passé hors service.");
-        return "redirect:/equipements/" + id;
+        return "redirect:/incidents/" + incident.getId();
     }
 }

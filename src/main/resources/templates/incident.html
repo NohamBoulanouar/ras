@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title th:text="|Incident n° ${incident.id} — RAS|">Incident — RAS</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<header th:replace="~{fragments/entete :: entete}"></header>
+<main class="contenu"
+      th:with="responsable=${utilisateurConnecte != null and utilisateurConnecte.profil.name() == 'RESPONSABLE'}">
+    <div th:replace="~{fragments/entete :: messages}"></div>
+    <p><a th:href="@{/equipements/{id}(id=${incident.equipement.id})}" th:text="|← ${incident.equipement.reference}|">← ASC-GC-01</a></p>
+
+    <div class="titre-avec-action">
+        <h1 th:text="|Incident n° ${incident.id}|">Incident n° 1</h1>
+        <span th:if="${incident.estResolu()}" class="badge badge-vert badge-grand">Résolu</span>
+        <span th:if="${niveau != null}" class="badge badge-grand"
+              th:classappend="|badge-${#strings.toLowerCase(niveau.name())}|"
+              th:text="${niveau.libelle}">Moins de 48 h</span>
+    </div>
+
+    <div class="grille-detail">
+        <section class="carte">
+            <h2>Informations</h2>
+            <dl class="liste-detail">
+                <dt>Équipement</dt>
+                <dd><a th:href="@{/equipements/{id}(id=${incident.equipement.id})}"
+                       th:text="|${incident.equipement.reference} — ${incident.equipement.libelle}|">ASC-GC-01</a></dd>
+                <dt>Station</dt>
+                <dd><a th:href="@{/stations/{id}(id=${incident.equipement.station.id})}"
+                       th:text="${incident.equipement.station.nom}">Gare Centrale</a></dd>
+                <dt>Description</dt>
+                <dd th:text="${incident.description}">Panne</dd>
+                <dt>Ouvert le</dt>
+                <dd th:text="${#temporals.format(incident.dateOuverture, 'dd/MM/yyyy à HH:mm')}">01/10/2026 à 08:00</dd>
+                <dt th:text="${incident.estResolu()} ? 'Durée avant résolution' : 'Ouvert depuis'">Ouvert depuis</dt>
+                <dd th:text="${dureeOuverture}">2 j 4 h</dd>
+                <dt>Prestataire</dt>
+                <dd>
+                    <a th:if="${incident.prestataire != null}" th:href="@{/prestataires/{id}(id=${incident.prestataire.id})}"
+                       th:text="${incident.prestataire.nom}">Élévatec</a>
+                    <span th:if="${incident.prestataire == null}">Aucun</span>
+                </dd>
+                <th:block th:if="${incident.estResolu()}">
+                    <dt>Résolu le</dt>
+                    <dd th:text="${#temporals.format(incident.dateResolution, 'dd/MM/yyyy à HH:mm')}">03/10/2026 à 12:00</dd>
+                </th:block>
+                <dt>Évaluation</dt>
+                <dd>
+                    <span th:if="${evaluation != null}">
+                        <strong th:text="|${evaluation.note} / 5|">4 / 5</strong>
+                        <span th:if="${evaluation.commentaire != null and !#strings.isEmpty(evaluation.commentaire)}"
+                              th:text="|— ${evaluation.commentaire}|">— Très bien</span>
+                    </span>
+                    <span th:if="${evaluation == null}">Aucune</span>
+                </dd>
+            </dl>
+        </section>
+
+        <section class="carte" th:if="${responsable}">
+            <h2>Actions</h2>
+
+            <th:block th:if="${!incident.estResolu()}">
+                <form th:action="@{/incidents/{id}/affecter(id=${incident.id})}" method="post" class="formulaire-action">
+                    <label for="prestataireId" th:text="${incident.prestataire == null} ? 'Affecter un prestataire' : 'Réaffecter à un autre prestataire'">Affecter un prestataire</label>
+                    <div class="ligne-formulaire">
+                        <select id="prestataireId" name="prestataireId" required>
+                            <option th:each="prestataire : ${prestataires}" th:value="${prestataire.id}"
+                                    th:text="${prestataire.nom}"
+                                    th:selected="${incident.prestataire != null and incident.prestataire.id == prestataire.id}">Élévatec</option>
+                        </select>
+                        <button type="submit" class="bouton bouton-action" th:text="${incident.prestataire == null} ? 'Affecter' : 'Réaffecter'">Affecter</button>
+                    </div>
+                </form>
+
+                <form th:action="@{/incidents/{id}/description(id=${incident.id})}" th:object="${descriptionFormulaire}" method="post" class="formulaire-action" novalidate>
+                    <label for="description">Modifier la description</label>
+                    <textarea id="description" th:field="*{description}" rows="3"
+                              th:classappend="${#fields.hasErrors('description')} ? 'champ-erreur'"></textarea>
+                    <p class="message-erreur" th:if="${#fields.hasErrors('description')}" th:errors="*{description}">Erreur</p>
+                    <button type="submit" class="bouton bouton-discret">Enregistrer la description</button>
+                </form>
+
+                <form th:action="@{/incidents/{id}/resoudre(id=${incident.id})}" method="post" class="formulaire-action">
+                    <p class="aide" th:if="${incident.prestataire == null}">
+                        Aucun prestataire n'est affecté : l'incident sera clos sans intervention et ne pourra pas être évalué.
+                    </p>
+                    <button type="submit" class="bouton bouton-succes">Déclarer l'incident résolu</button>
+                </form>
+            </th:block>
+
+            <form th:if="${incident.estResolu() and incident.prestataire != null and evaluation == null}"
+                  th:action="@{/incidents/{id}/evaluer(id=${incident.id})}" th:object="${evaluationFormulaire}"
+                  method="post" class="formulaire-action" novalidate>
+                <label for="note" th:text="|Évaluer l'intervention de ${incident.prestataire.nom}|">Évaluer l'intervention</label>
+                <select id="note" th:field="*{note}" th:classappend="${#fields.hasErrors('note')} ? 'champ-erreur'">
+                    <option value="">Choisir une note</option>
+                    <option th:each="valeur : ${#numbers.sequence(5, 1, -1)}" th:value="${valeur}" th:text="|${valeur} / 5|">5 / 5</option>
+                </select>
+                <p class="message-erreur" th:if="${#fields.hasErrors('note')}" th:errors="*{note}">Erreur</p>
+                <label for="commentaire">Commentaire (facultatif)</label>
+                <textarea id="commentaire" th:field="*{commentaire}" rows="2"></textarea>
+                <p class="message-erreur" th:if="${#fields.hasErrors('commentaire')}" th:errors="*{commentaire}">Erreur</p>
+                <button type="submit" class="bouton bouton-action">Enregistrer l'évaluation</button>
+            </form>
+
+            <p class="aide" th:if="${incident.estResolu() and (incident.prestataire == null or evaluation != null)}">
+                Incident clos : plus aucune action possible.
+            </p>
+        </section>
+
+        <section class="carte" th:if="${!responsable}">
+            <h2>Actions</h2>
+            <p class="aide">Seul le responsable d'exploitation peut affecter, modifier, résoudre ou évaluer un incident.</p>
+        </section>
+    </div>
+</main>
+</body>
+</html>

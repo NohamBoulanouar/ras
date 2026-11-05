@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Clock;
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -86,6 +87,21 @@ public class IncidentService {
         }
         incident.setDescription(description);
 
+    }
+
+    public Incident trouver(Long incidentId) {
+        return incidentRepository.findById(incidentId)
+                .orElseThrow(() -> new RessourceIntrouvableException("Incident introuvable : " + incidentId));
+    }
+
+    // Pour un incident résolu, la durée s'arrête à la résolution ; sinon elle court jusqu'à maintenant
+    public Duration dureeOuverture(Incident incident) {
+        LocalDateTime fin = incident.estResolu() ? incident.getDateResolution() : LocalDateTime.now(horloge);
+        return Duration.between(incident.getDateOuverture(), fin);
+    }
+
+    public List<Incident> listerParPrestataire(Long prestataireId) {
+        return incidentRepository.findByPrestataireIdOrderByDateOuvertureDesc(prestataireId);
     }
 
     public List<Incident> listerActifs() {

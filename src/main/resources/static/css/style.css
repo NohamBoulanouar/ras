@@ -105,7 +105,6 @@ input:focus, select:focus, textarea:focus { outline: 2px solid var(--principal);
 .badge-vert { background: var(--vert); }
 .badge-orange { background: var(--orange); }
 .badge-rouge { background: var(--rouge); }
-.badge-pris-en-charge { background: var(--pris-en-charge); }
 
 a { color: var(--principal); }
 
@@ -124,3 +123,22 @@ h2 { margin-top: 2rem; }
 /* Validation des formulaires */
 .champ-erreur { border-color: var(--rouge); }
 .message-erreur { color: var(--rouge); margin: 0.25rem 0 0; font-size: 0.9rem; }
+
+/* Détail d'un incident */
+.badge-pris_en_charge { background: var(--pris-en-charge); }
+.badge-grand { font-size: 1rem; padding: 0.3rem 0.9rem; }
+.grille-detail { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.5rem; align-items: start; }
+.grille-detail h2 { margin-top: 0; }
+.liste-detail { display: grid; grid-template-columns: max-content 1fr; gap: 0.5rem 1rem; margin: 0; }
+.liste-detail dt { font-weight: 600; color: var(--texte-doux); }
+.liste-detail dd { margin: 0; }
+.formulaire-action { padding: 1rem 0; border-bottom: 1px solid var(--bordure); }
+.formulaire-action:last-of-type { border-bottom: none; }
+.formulaire-action label { margin-top: 0; }
+.ligne-formulaire { display: flex; gap: 0.5rem; }
+.ligne-formulaire select { flex: 1; }
+.formulaire-action .bouton { margin-top: 0.5rem; }
+.ligne-formulaire .bouton { margin-top: 0; }
+.bouton-succes { background: var(--vert); color: #fff; }
+.aide { color: var(--texte-doux); font-size: 0.92rem; margin: 0 0 0.5rem; }
+.note-moyenne { font-size: 1.1rem; }

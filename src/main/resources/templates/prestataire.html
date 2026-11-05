@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title th:text="|${prestataire.nom} — RAS|">Prestataire — RAS</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<header th:replace="~{fragments/entete :: entete}"></header>
+<main class="contenu">
+    <p><a th:href="@{/prestataires}">← Tous les prestataires</a></p>
+    <h1 th:text="${prestataire.nom}">Élévatec</h1>
+    <p>
+        <span th:text="${prestataire.email}">contact@…</span> ·
+        <span th:text="${prestataire.telephone}">01 …</span>
+    </p>
+    <p class="note-moyenne">
+        Note moyenne :
+        <strong th:text="${noteMoyenne != null} ? |${#numbers.formatDecimal(noteMoyenne, 1, 1, 'COMMA')} / 5| : 'pas encore évalué'">4,0 / 5</strong>
+    </p>
+
+    <h2>Interventions</h2>
+    <table class="tableau">
+        <thead>
+        <tr>
+            <th>Ouvert le</th>
+            <th>Équipement</th>
+            <th>Description</th>
+            <th>Statut</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="incident : ${incidents}">
+            <td><a th:href="@{/incidents/{id}(id=${incident.id})}"
+                   th:text="${#temporals.format(incident.dateOuverture, 'dd/MM/yyyy HH:mm')}">01/10/2026 08:00</a></td>
+            <td th:text="|${incident.equipement.reference} (${incident.equipement.station.nom})|">ASC-GC-01</td>
+            <td th:text="${incident.description}">Panne</td>
+            <td>
+                <span th:if="${incident.estResolu()}" class="badge badge-vert">Résolu</span>
+                <span th:if="${incident.estAffecte()}" class="badge badge-pris_en_charge">Pris en charge</span>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <p th:if="${#lists.isEmpty(incidents)}">Aucune intervention pour ce prestataire.</p>
+</main>
+</body>
+</html>

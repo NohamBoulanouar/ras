@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Clock;
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Service
 public class EvaluationService {
@@ -52,5 +53,9 @@ public class EvaluationService {
 
         Evaluation evaluation = new Evaluation(incident, note, commentaire, LocalDateTime.now(horloge));
         return evaluationRepository.save(evaluation);
+    }
+
+    public Optional<Evaluation> trouverParIncident(Long incidentId) {
+        return evaluationRepository.findByIncidentId(incidentId);
     }
 }

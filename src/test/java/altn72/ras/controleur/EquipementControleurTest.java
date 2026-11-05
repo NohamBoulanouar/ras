@@ -16,6 +16,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrlPattern;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -57,7 +58,7 @@ class EquipementControleurTest {
     void lAgentDeclareUnIncident() throws Exception {
         Long id = idDe("POR-BE-03");
         mockMvc.perform(post("/equipements/{id}/declarer", id).param("description", "Lecteur de badge HS").with(agent()).with(csrf()))
-                .andExpect(redirectedUrl("/equipements/" + id));
+                .andExpect(redirectedUrlPattern("/incidents/*"));
     }
 
     @Test

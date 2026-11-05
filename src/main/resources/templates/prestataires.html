@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Prestataires — RAS</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<header th:replace="~{fragments/entete :: entete}"></header>
+<main class="contenu">
+    <h1>Prestataires</h1>
+    <table class="tableau">
+        <thead>
+        <tr>
+            <th>Nom</th>
+            <th>Contact</th>
+            <th>Note moyenne</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="entree : ${notesMoyennes}">
+            <td><a th:href="@{/prestataires/{id}(id=${entree.key.id})}" th:text="${entree.key.nom}">Élévatec</a></td>
+            <td th:text="|${entree.key.email} · ${entree.key.telephone}|">contact@… · 01…</td>
+            <td th:text="${entree.value != null} ? |${#numbers.formatDecimal(entree.value, 1, 1, 'COMMA')} / 5| : 'Pas encore évalué'">4,0 / 5</td>
+        </tr>
+        </tbody>
+    </table>
+</main>
+</body>
+</html>

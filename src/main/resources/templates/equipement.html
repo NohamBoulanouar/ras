@@ -42,10 +42,13 @@
             <td th:text="${incident.description}">Panne</td>
             <td>
                 <span th:if="${incident.estResolu()}" class="badge badge-vert">Résolu</span>
-                <span th:if="${incident.estAffecte()}" class="badge badge-pris-en-charge">Pris en charge</span>
+                <span th:if="${incident.estAffecte()}" class="badge badge-pris_en_charge">Pris en charge</span>
                 <span th:if="${!incident.estResolu() and !incident.estAffecte()}" class="badge badge-orange">En attente</span>
             </td>
-            <td th:text="${incident.prestataire != null} ? ${incident.prestataire.nom} : '—'">Élévatec</td>
+            <td>
+                <a th:if="${incident.prestataire != null}" th:href="@{/prestataires/{id}(id=${incident.prestataire.id})}" th:text="${incident.prestataire.nom}">Élévatec</a>
+                <span th:if="${incident.prestataire == null}">—</span>
+            </td>
             <td><a th:href="@{/incidents/{id}(id=${incident.id})}">Détail</a></td>
         </tr>
         </tbody>
