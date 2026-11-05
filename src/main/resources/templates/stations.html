@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Stations — RAS</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<header th:replace="~{fragments/entete :: entete}"></header>
+<main class="contenu">
+    <h1>Stations</h1>
+    <ul class="liste-cartes">
+        <li th:each="station : ${stations}">
+            <a class="carte carte-lien" th:href="@{/stations/{id}(id=${station.id})}" th:text="${station.nom}">Gare Centrale</a>
+        </li>
+    </ul>
+    <p th:if="${#lists.isEmpty(stations)}">Aucune station.</p>
+</main>
+</body>
+</html>

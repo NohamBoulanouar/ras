@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title th:text="|${station.nom} — RAS|">Station — RAS</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<header th:replace="~{fragments/entete :: entete}"></header>
+<main class="contenu">
+    <p><a th:href="@{/stations}">← Toutes les stations</a></p>
+    <h1 th:text="${station.nom}">Gare Centrale</h1>
+
+    <table class="tableau">
+        <thead>
+        <tr>
+            <th>Référence</th>
+            <th>Équipement</th>
+            <th>Type</th>
+            <th>État</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="equipement : ${equipements}">
+            <td><a th:href="@{/equipements/{id}(id=${equipement.id})}" th:text="${equipement.reference}">ASC-GC-01</a></td>
+            <td th:text="${equipement.libelle}">Ascenseur quai A</td>
+            <td th:text="${equipement.type.libelle}">Ascenseur</td>
+            <td>
+                <span class="badge"
+                      th:classappend="${equipement.etat.name() == 'EN_SERVICE'} ? 'badge-vert' : 'badge-rouge'"
+                      th:text="${equipement.etat.name() == 'EN_SERVICE'} ? 'En service' : 'Hors service'">En service</span>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <p th:if="${#lists.isEmpty(equipements)}">Aucun équipement dans cette station.</p>
+</main>
+</body>
+</html>

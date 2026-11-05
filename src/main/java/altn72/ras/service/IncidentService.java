@@ -95,4 +95,8 @@ public class IncidentService {
     public List<Incident> historique() {
         return incidentRepository.trouverHistoriqueResolus();
     }
+
+    public List<Incident> listerParEquipement(Long equipementId) {
+        return incidentRepository.findByEquipementIdOrderByDateOuvertureDesc(equipementId);
+    }
 }

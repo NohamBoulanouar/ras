@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<body>
+<header class="entete" th:fragment="entete">
+    <div class="entete-gauche">
+        <a class="logo" th:href="@{/}">RAS <span class="logo-sous-titre">Rien À Signaler</span></a>
+        <nav class="navigation" th:if="${utilisateurConnecte != null}">
+            <a th:if="${utilisateurConnecte.profil.name() == 'RESPONSABLE'}" th:href="@{/tableau-de-bord}">Tableau de bord</a>
+            <a th:href="@{/stations}">Stations</a>
+            <a th:href="@{/historique}">Historique</a>
+            <a th:href="@{/prestataires}">Prestataires</a>
+        </nav>
+    </div>
+    <div class="entete-utilisateur" th:if="${utilisateurConnecte != null}">
+        <span th:text="|Bonjour ${utilisateurConnecte.prenom} (${#strings.toLowerCase(utilisateurConnecte.profil)})|">Bonjour Claire (responsable)</span>
+        <span class="separateur">|</span>
+        <form th:action="@{/logout}" method="post">
+            <button type="submit" class="lien-bouton">Déconnectez-vous</button>
+        </form>
+    </div>
+</header>
+<div th:fragment="messages">
+    <p class="alerte alerte-succes" th:if="${succes}" th:text="${succes}">Opération réussie.</p>
+</div>
+</body>
+</html>

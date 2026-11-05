@@ -82,3 +82,45 @@ input:focus, select:focus, textarea:focus { outline: 2px solid var(--principal);
 .alerte-erreur { background: #fde8e8; color: var(--rouge); }
 .alerte-info { background: #e6effc; color: var(--principal-fonce); }
 .alerte-succes { background: #e3f4e8; color: var(--vert); }
+
+/* Navigation */
+.entete-gauche { display: flex; align-items: center; gap: 1.5rem; }
+.navigation { display: flex; gap: 1rem; }
+.navigation a { color: var(--texte); text-decoration: none; }
+.navigation a:hover { color: var(--principal); }
+
+/* Listes de cartes */
+.liste-cartes { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 1rem; }
+.carte-lien { display: block; text-decoration: none; color: var(--texte); font-weight: 600; }
+.carte-lien:hover { border-color: var(--principal); color: var(--principal); }
+
+/* Tableaux */
+.tableau { width: 100%; border-collapse: collapse; background: var(--carte); border: 1px solid var(--bordure); border-radius: 8px; overflow: hidden; }
+.tableau th, .tableau td { padding: 0.6rem 0.8rem; text-align: left; border-bottom: 1px solid var(--bordure); }
+.tableau th { background: #eef1f4; font-size: 0.9rem; }
+.tableau tr:last-child td { border-bottom: none; }
+
+/* Badges d'état */
+.badge { display: inline-block; padding: 0.15rem 0.6rem; border-radius: 999px; font-size: 0.85rem; font-weight: 600; color: #fff; }
+.badge-vert { background: var(--vert); }
+.badge-orange { background: var(--orange); }
+.badge-rouge { background: var(--rouge); }
+.badge-pris-en-charge { background: var(--pris-en-charge); }
+
+a { color: var(--principal); }
+
+/* Titre avec bouton d'action à droite */
+.titre-avec-action { display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; flex-wrap: wrap; }
+.bouton-action { background: var(--principal); color: #fff; }
+.bouton-action:hover { background: var(--principal-fonce); }
+.carte-formulaire { max-width: 560px; }
+h2 { margin-top: 2rem; }
+
+/* En-tête : sous-titre du logo et lien de déconnexion */
+.logo-sous-titre { font-size: 0.8rem; font-weight: 400; color: var(--texte-doux); margin-left: 0.25rem; }
+.separateur { color: var(--bordure); }
+.lien-bouton { background: none; border: none; padding: 0; font: inherit; color: var(--principal); cursor: pointer; text-decoration: underline; }
+
+/* Validation des formulaires */
+.champ-erreur { border-color: var(--rouge); }
+.message-erreur { color: var(--rouge); margin: 0.25rem 0 0; font-size: 0.9rem; }

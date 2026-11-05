@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Déclarer un incident — RAS</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<header th:replace="~{fragments/entete :: entete}"></header>
+<main class="contenu">
+    <p><a th:href="@{/equipements/{id}(id=${equipement.id})}" th:text="|← ${equipement.reference}|">← ASC-GC-01</a></p>
+
+    <div class="carte carte-formulaire">
+        <h1>Déclarer un incident</h1>
+        <p th:text="|${equipement.reference} — ${equipement.libelle} (${equipement.station.nom})|">ASC-GC-01 — Ascenseur quai A (Gare Centrale)</p>
+
+        <form th:action="@{/equipements/{id}/declarer(id=${equipement.id})}" th:object="${formulaire}" method="post" novalidate>
+            <label for="description">Description de la panne</label>
+            <textarea id="description" th:field="*{description}" rows="4"
+                      th:classappend="${#fields.hasErrors('description')} ? 'champ-erreur'"
+                      placeholder="Ex. : l'ascenseur reste bloqué au 2e étage"></textarea>
+            <p class="message-erreur" th:if="${#fields.hasErrors('description')}" th:errors="*{description}">Erreur</p>
+            <button type="submit" class="bouton bouton-principal">Déclarer</button>
+        </form>
+    </div>
+</main>
+</body>
+</html>

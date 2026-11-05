@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title th:text="|${equipement.reference} — RAS|">Équipement — RAS</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<header th:replace="~{fragments/entete :: entete}"></header>
+<main class="contenu">
+    <div th:replace="~{fragments/entete :: messages}"></div>
+    <p><a th:href="@{/stations/{id}(id=${equipement.station.id})}" th:text="|← ${equipement.station.nom}|">← Gare Centrale</a></p>
+
+    <div class="titre-avec-action">
+        <div>
+            <h1 th:text="|${equipement.reference} — ${equipement.libelle}|">ASC-GC-01 — Ascenseur quai A</h1>
+            <p>
+                <span th:text="${equipement.type.libelle}">Ascenseur</span> ·
+                <span class="badge"
+                      th:classappend="${equipement.etat.name() == 'EN_SERVICE'} ? 'badge-vert' : 'badge-rouge'"
+                      th:text="${equipement.etat.name() == 'EN_SERVICE'} ? 'En service' : 'Hors service'">En service</span>
+            </p>
+        </div>
+        <a class="bouton bouton-action" th:href="@{/equipements/{id}/declarer(id=${equipement.id})}">Déclarer un incident</a>
+    </div>
+
+    <h2>Incidents</h2>
+    <table class="tableau">
+        <thead>
+        <tr>
+            <th>Ouvert le</th>
+            <th>Description</th>
+            <th>Statut</th>
+            <th>Prestataire</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="incident : ${incidents}">
+            <td th:text="${#temporals.format(incident.dateOuverture, 'dd/MM/yyyy HH:mm')}">01/10/2026 08:00</td>
+            <td th:text="${incident.description}">Panne</td>
+            <td>
+                <span th:if="${incident.estResolu()}" class="badge badge-vert">Résolu</span>
+                <span th:if="${incident.estAffecte()}" class="badge badge-pris-en-charge">Pris en charge</span>
+                <span th:if="${!incident.estResolu() and !incident.estAffecte()}" class="badge badge-orange">En attente</span>
+            </td>
+            <td th:text="${incident.prestataire != null} ? ${incident.prestataire.nom} : '—'">Élévatec</td>
+            <td><a th:href="@{/incidents/{id}(id=${incident.id})}">Détail</a></td>
+        </tr>
+        </tbody>
+    </table>
+    <p th:if="${#lists.isEmpty(incidents)}">Aucun incident pour cet équipement.</p>
+</main>
+</body>
+</html>
