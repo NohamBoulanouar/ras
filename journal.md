@@ -48,10 +48,11 @@ Les mots de passe sont stockés hachés (BCrypt) en base.
 - API : `http://localhost:8080/api/incidents`
 
 ### Application déployée
-Non déployée : voir les limites ci-dessous.
+https://ras-production-76dd.up.railway.app (hébergée sur Railway, avec une base MariaDB ; mêmes comptes de test que ci-dessus).
+
+Le déploiement utilise le `Dockerfile` du dépôt. La connexion à la base est fournie par les variables d'environnement `DB_URL`, `DB_USER` et `DB_PASSWORD`, et aucun secret n'est versionné.
 
 ### Limites connues
-- **Pas de déploiement en ligne** (§7.9) : faute de temps, l'application n'a pas été mise sur un serveur. Elle est prête à l'être : le port (`PORT`) et la base (`DB_URL`, `DB_USER`, `DB_PASSWORD`) se configurent par variables d'environnement.
 - La base est recréée à chaque démarrage, ce qui convient à une démonstration mais pas à une production. Il faudrait passer à `ddl-auto=validate` et à des migrations Flyway.
 - La création d'équipements existe dans le service (`EquipementService.creer`, avec référence unique) mais n'a pas d'écran : le parc est fixé par les données de démonstration.
 
@@ -258,7 +259,6 @@ Si une `RegleMetierException` est levée, la transaction est annulée : aucune d
   - fin du projet : écrans de détail, d'historique et de tableau de bord, API REST, export CSV, tests web et repository, JaCoCo et ce journal.
 - **Plus grande difficulté :** avancer seule à un rythme suffisant. J'ai passé beaucoup de temps à bien comprendre les tests et la couche service (par exemple pourquoi `estAffecte()` ne convient pas pour savoir si un incident résolu avait un prestataire), et j'ai pris du retard sur les écrans. Je l'ai surmonté en priorisant le socle (règles métier testées) avant l'interface.
 - **Non réalisé :**
-  - le déploiement en ligne (§7.9), par manque de temps ;
   - un écran de création d'équipement ;
   - les tests sur une vraie MariaDB.
 - **Trois points à retenir :**
