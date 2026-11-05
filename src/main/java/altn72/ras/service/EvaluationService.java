@@ -12,7 +12,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Clock;
 import java.time.LocalDateTime;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class EvaluationService {
@@ -57,5 +59,10 @@ public class EvaluationService {
 
     public Optional<Evaluation> trouverParIncident(Long incidentId) {
         return evaluationRepository.findByIncidentId(incidentId);
+    }
+
+    public Map<Long, Integer> notesParIncident() {
+        return evaluationRepository.findAll().stream()
+                .collect(Collectors.toMap(evaluation -> evaluation.getIncident().getId(), Evaluation::getNote));
     }
 }

@@ -10,8 +10,12 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
 @Transactional
@@ -57,5 +61,15 @@ class IncidentServiceTest {
 
         assertThrows(AccessDeniedException.class,
                 () -> incidentService.resoudre(incident.getId()));
+    }
+
+    @Test
+    void lHistoriqueEstOrdonneDuPlusRecentAuPlusAncien() {
+        List<Incident> historique = incidentService.historique();
+
+        assertTrue(historique.size() >= 2);
+        for (int i = 1; i < historique.size(); i++) {
+            assertFalse(historique.get(i).getDateResolution().isAfter(historique.get(i - 1).getDateResolution()));
+        }
     }
 }

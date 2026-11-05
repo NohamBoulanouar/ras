@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Historique — RAS</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<header th:replace="~{fragments/entete :: entete}"></header>
+<main class="contenu">
+    <div class="titre-avec-action">
+        <div>
+            <h1>Historique des incidents résolus</h1>
+            <p class="aide">Du plus récent au plus ancien, par date de résolution.</p>
+        </div>
+        <a th:if="${utilisateurConnecte != null and utilisateurConnecte.profil.name() == 'RESPONSABLE'}"
+           class="bouton bouton-action" th:href="@{/historique/export.csv}">Exporter en CSV</a>
+    </div>
+
+    <table class="tableau">
+        <thead>
+        <tr>
+            <th>Résolu le</th>
+            <th>Station</th>
+            <th>Équipement</th>
+            <th>Description</th>
+            <th>Prestataire</th>
+            <th>Note</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="incident : ${incidents}">
+            <td><a th:href="@{/incidents/{id}(id=${incident.id})}"
+                   th:text="${#temporals.format(incident.dateResolution, 'dd/MM/yyyy HH:mm')}">03/10/2026 12:00</a></td>
+            <td th:text="${incident.equipement.station.nom}">Gare Centrale</td>
+            <td th:text="${incident.equipement.reference}">ASC-GC-01</td>
+            <td th:text="${incident.description}">Panne</td>
+            <td>
+                <a th:if="${incident.prestataire != null}" th:href="@{/prestataires/{id}(id=${incident.prestataire.id})}"
+                   th:text="${incident.prestataire.nom}">Élévatec</a>
+                <span th:if="${incident.prestataire == null}">Sans intervention</span>
+            </td>
+            <td th:text="${notes.containsKey(incident.id)} ? |${notes.get(incident.id)} / 5| : '—'">4 / 5</td>
+        </tr>
+        </tbody>
+    </table>
+    <p th:if="${#lists.isEmpty(incidents)}">Aucun incident résolu pour l'instant.</p>
+</main>
+</body>
+</html>
